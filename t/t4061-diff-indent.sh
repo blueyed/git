@@ -116,6 +116,16 @@ test_expect_success 'prepare' '
 	 4
 	EOF
 
+	cat <<-\EOF >spaces-compacted-U0-expect &&
+	diff --git a/spaces.txt b/spaces.txt
+	--- a/spaces.txt
+	+++ b/spaces.txt
+	@@ -4,0 +5,3 @@ a
+	+b
+	+a
+	+
+	EOF
+
 	tr "_" " " <<-\EOF >functions-expect &&
 	diff --git a/functions.c b/functions.c
 	--- a/functions.c
@@ -182,6 +192,11 @@ test_expect_success 'diff: --indent-heuristic with --patience' '
 test_expect_success 'diff: --indent-heuristic with --histogram' '
 	git diff --indent-heuristic --histogram old new -- spaces.txt >out-compacted4 &&
 	compare_diff spaces-compacted-expect out-compacted4
+'
+
+test_expect_success 'diff: --indent-heuristic with -U0' '
+	git diff -U0 --indent-heuristic old new -- spaces.txt >out-compacted5 &&
+	compare_diff spaces-compacted-U0-expect out-compacted5
 '
 
 test_expect_success 'diff: ugly functions' '

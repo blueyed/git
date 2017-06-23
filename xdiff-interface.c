@@ -131,10 +131,10 @@ int xdi_diff(mmfile_t *mf1, mmfile_t *mf2, xpparam_t const *xpp, xdemitconf_t co
 	if (mf1->size > MAX_XDIFF_SIZE || mf2->size > MAX_XDIFF_SIZE)
 		return -1;
 
-	if (!xecfg->ctxlen && !(xecfg->flags & XDL_EMIT_FUNCCONTEXT))
+	int ret = xdl_diff(&a, &b, xpp, xecfg, xecb);
+	if (ret && !xecfg->ctxlen)
 		trim_common_tail(&a, &b);
-
-	return xdl_diff(&a, &b, xpp, xecfg, xecb);
+	return ret;
 }
 
 int xdi_diff_outf(mmfile_t *mf1, mmfile_t *mf2,
